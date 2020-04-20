@@ -9,10 +9,10 @@
 int main() {
   constexpr std::size_t kFramesPerSecond{60};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
-  constexpr std::size_t kScreenWidth{640};
-  constexpr std::size_t kScreenHeight{640};
-  constexpr std::size_t kGridWidth{32};
-  constexpr std::size_t kGridHeight{32};
+  constexpr std::size_t kScreenWidth{240};
+  constexpr std::size_t kScreenHeight{400};
+  constexpr std::size_t kGridWidth{12};
+  constexpr std::size_t kGridHeight{20};
 
   //Update the Tetrom class
   Tetrom::gridWidth = kGridWidth;
