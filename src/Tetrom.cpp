@@ -105,7 +105,7 @@ bool Tetrom::Move(MoveType moveType, float speed) {
 // Turn tetrom according to turn-type, if the final position is out of the range
 // of the grid the function return false and does not affect the tetrom
 bool Tetrom::Turn(TurnType turnType) {
-  float _tempCurrState = _currState;
+  int oldCurrState = _currState;
 
   // Move the index
   if (turnType == TurnType::CW) {
@@ -123,9 +123,25 @@ bool Tetrom::Turn(TurnType turnType) {
 
   // check that tetrom is on the grid range
   if (!TetromInGridRange()) {
-    _currState = _tempCurrState;
-    return false;
-  }
+    // return to last state
+    std::swap(_currState, oldCurrState);
+    
+    // try to re-base. ReBase is a destructive function then copy current positions firts
+    Point<float> backupCurrPos = _currPos;
+    ReBase();
 
+    if (TetromInGridRange()) {
+      //rebase was successful: update current state
+      std::swap(_currState, oldCurrState);
+      return true;
+    }
+    else
+    {
+      //Recover the _currPosition
+      _currPos = backupCurrPos;
+      return false;
+    }
+  }
+  
   return true;
 }
