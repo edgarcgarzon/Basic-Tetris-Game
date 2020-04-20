@@ -3,9 +3,11 @@
 #include <iostream>
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : tetrom(), engine(dev()),
-      random_w(0, static_cast<int>(grid_width)),
-      random_h(0, static_cast<int>(grid_height)) {
+    : engine(dev()), random_w(0, static_cast<int>(grid_width)),
+      random_t(0, static_cast<int>((int)TetromType::Count-1)) {
+
+  CreateNewTetrom();
+  _newTetrom = false;
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -21,9 +23,9 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, tetrom);
+    controller.HandleInput(running, _tetrom);
     Update();
-    renderer.Render(tetrom);
+    renderer.Render(_tetrom);
 
     frame_end = SDL_GetTicks();
 
@@ -34,7 +36,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count);
+      renderer.UpdateWindowTitle(_score, frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -48,9 +50,49 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   }
 }
 
-
 void Game::Update() {
-
+  if (_newTetrom) {
+    CreateNewTetrom();
+    _newTetrom = false;
+  } else {
+    if (!_tetrom->Move(MoveType::Down, 0.05)) {
+      _newTetrom = true;
+    }
+  }
 }
 
-int Game::GetScore() const { return score; }
+// Create the new tetrom
+void Game::CreateNewTetrom() {
+  // Get the tetrom randomly
+  TetromType TT = (TetromType)random_t(engine);
+
+  // Get initial point randomly
+  Point<int> initPoint{0, 0};
+  initPoint.x = random_w(engine);
+
+  // TODO: get the initial state randomly
+
+  // Create the new Teatrom
+  switch (TT) {
+  case TetromType::I:
+    _tetrom = std::make_shared<ITetrom>(initPoint, 0);
+    break;
+  case TetromType::S:
+    _tetrom = std::make_shared<STetrom>(initPoint, 0);
+    break;
+  case TetromType::T:
+    _tetrom = std::make_shared<TTetrom>(initPoint, 0);
+    break;
+  case TetromType::O:
+    _tetrom = std::make_shared<OTetrom>(initPoint, 0);
+    break;
+  case TetromType::L:
+    _tetrom = std::make_shared<LTetrom>(initPoint, 0);
+    break;
+  default:
+    throw "Out of range";
+    break;
+  }
+}
+
+int Game::GetScore() const { return _score; }

@@ -5,10 +5,10 @@
 int Tetrom::gridWidth = 20;
 int Tetrom::gridHeight = 20;
 
-Tetrom::Tetrom(Point<int> initPos, int initState,
+Tetrom::Tetrom(Point<int> initPos, int initState, TetromType type,
                std::vector<std::vector<Point<int>>> states)
     : _currPos({(float)initPos.x, (float)initPos.y}), _currState(initState),
-      _states(states) {
+      _type(type), _states(states) {
 
   // Check if current position is inside the grid
   if (!TetromInGridRange()) {
@@ -20,9 +20,9 @@ Tetrom::Tetrom(Point<int> initPos, int initState,
 // Check if the current position is with-in the grid's dimension
 bool Tetrom::TetromInGridRange() const {
   Point p = GetMaxXY();
-  if (p.x > gridWidth)
+  if (p.x >= gridWidth)
     return false;
-  if (p.y > gridHeight)
+  if (p.y >= gridHeight)
     return false;
 
   p = GetMinXY();
@@ -69,15 +69,16 @@ std::vector<Point<int>> Tetrom::GetCurrPoints() const {
   return std::move(retV);
 }
 
-// Move tetrom according to direction and speed, if the final position is out of the
-// range of the grid: the function return false and does not affect the tetrom
+// Move tetrom according to direction and speed, if the final position is out of
+// the range of the grid: the function return false and does not affect the
+// tetrom
 bool Tetrom::Move(MoveType moveType, float speed) {
-  
+
   Point<float> tempCurrPos = _currPos;
 
   switch (moveType) {
   case MoveType::Down:
-    _currPos.y -= speed;
+    _currPos.y += speed;
     break;
 
   case MoveType::Left:

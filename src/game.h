@@ -1,11 +1,14 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <random>
+#include <memory>
+
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
 #include "Tetrom.h"
-#include <random>
+
 
 class Game {
 public:
@@ -15,16 +18,18 @@ public:
   int GetScore() const;
 
 private:
-  Tetrom tetrom;
+  std::shared_ptr<Tetrom> _tetrom;
 
   std::random_device dev;
   std::mt19937 engine;
   std::uniform_int_distribution<int> random_w;
-  std::uniform_int_distribution<int> random_h;
+  std::uniform_int_distribution<int> random_t;
 
-  int score{0};
+  bool _newTetrom;
+  int _score{0};
 
   void Update();
+  void CreateNewTetrom();
 };
 
 #endif

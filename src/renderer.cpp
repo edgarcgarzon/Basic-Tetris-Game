@@ -36,7 +36,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Tetrom const tetrom) {
+void Renderer::Render(std::shared_ptr<Tetrom> tetrom) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -44,7 +44,14 @@ void Renderer::Render(Tetrom const tetrom) {
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
-
+  
+  //Draw current tetrom
+   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  for (auto p: tetrom->GetCurrPoints()) {
+    block.x = p.x * block.w;
+    block.y = p.y * block.h;
+    SDL_RenderFillRect(sdl_renderer, &block);
+  }
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);

@@ -15,6 +15,16 @@ template <class T> struct Point {
   }
 };
 
+enum class TetromType
+{
+    L,
+    S,
+    T,
+    O,
+    I,
+    Count
+};
+
 enum class TurnType
 {
     CW = 0, //clock-wise
@@ -31,7 +41,7 @@ enum class MoveType
 
 class Tetrom {
 public:
-  Tetrom() : Tetrom({0, 0}, 0, {}) {} // Dummy constructor shall not be used
+  //Tetrom() : Tetrom({0, 0}, 0, {}) {} // Dummy constructor shall not be used
   bool Move(MoveType moveType, float speed);
   bool Turn(TurnType turnType);
   std::vector<Point<int>> GetCurrPoints() const;
@@ -43,7 +53,7 @@ public:
                          // instance
 
 protected:
-  Tetrom(Point<int> initPos, int initState,
+  Tetrom(Point<int> initPos, int initState, TetromType tetromType,
          std::vector<std::vector<Point<int>>> states);
 
 private:
@@ -54,6 +64,7 @@ private:
   const std::vector<std::vector<Point<int>>> _states;
   Point<float> _currPos;
   int _currState;
+  TetromType _type;
 };
 
 /*
@@ -65,7 +76,7 @@ X X 0   X X X   0 0 X   0 0 0
 class LTetrom : public Tetrom {
 public:
   LTetrom(Point<int> initPos, int initState)
-      : Tetrom(initPos, initState,
+      : Tetrom(initPos, initState, TetromType::L,
                {
                    {{0, 0}, {0, 1}, {0, 2}, {1, 2}},
                    {{0, 2}, {1, 2}, {2, 2}, {2, 1}},
@@ -83,7 +94,7 @@ X X 0   0 X X   0 X X   0 X X
 class STetrom : public Tetrom {
 public:
   STetrom(Point<int> initPos, int initState)
-      : Tetrom(initPos, initState,
+      : Tetrom(initPos, initState, TetromType::S,
                {
                    {{0, 0}, {0, 1}, {1, 1}, {1, 2}},
                    {{0, 2}, {1, 2}, {1, 1}, {2, 1}},
@@ -101,7 +112,7 @@ X X X   0 X X   X X X   X X 0
 class TTetrom : public Tetrom {
 public:
   TTetrom(Point<int> initPos, int initState)
-      : Tetrom(initPos, initState,
+      : Tetrom(initPos, initState,  TetromType::T,
                {
                    {{0, 1}, {1, 1}, {2, 1}, {1, 2}},
                    {{1, 0}, {1, 1}, {1, 2}, {2, 1}},
@@ -118,9 +129,9 @@ X X
 class OTetrom : public Tetrom {
 public:
   OTetrom(Point<int> initPos, int initState)
-      : Tetrom(initPos, initState,
+      : Tetrom(initPos, initState,  TetromType::O,
                {
-                   {{0, 0}, {1, 0}, {1, 0}, {1, 1}},
+                   {{0, 0}, {1, 0}, {0, 1}, {1, 1}},
                }) {}
 };
 
@@ -134,7 +145,7 @@ X 0 0 0   0 0 0 0
 class ITetrom : public Tetrom {
 public:
   ITetrom(Point<int> initPos, int initState)
-      : Tetrom(initPos, initState,
+      : Tetrom(initPos, initState,  TetromType::I,
                {
                    {{0, 0}, {0, 1}, {0, 2}, {0, 3}},
                    {{0, 0}, {1, 0}, {2, 0}, {3, 0}},

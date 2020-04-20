@@ -1,9 +1,12 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <vector>
+#include <memory>
+
 #include "SDL.h"
 #include "Tetrom.h"
-#include <vector>
+
 
 class Renderer {
 public:
@@ -11,7 +14,7 @@ public:
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(Tetrom const tetrom);
+  void Render(std::shared_ptr<Tetrom> tetrom);
   void UpdateWindowTitle(int score, int fps);
 
 private:

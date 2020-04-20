@@ -17,7 +17,6 @@ int main() {
   //Update the Tetrom class
   Tetrom::gridWidth = kGridWidth;
   Tetrom::gridHeight = kGridHeight;
-  
 
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
   Controller controller;
