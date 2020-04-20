@@ -8,7 +8,7 @@ int Tetrom::gridHeight = 20;
 Tetrom::Tetrom(Point<int> initPos, int initState, TetromType type,
                std::vector<std::vector<Point<int>>> states)
     : _currPos({(float)initPos.x, (float)initPos.y}), _currState(initState),
-      _type(type), _states(states) {
+      type(type), _states(states) {
 
   // Check if current position is inside the grid
   if (!TetromInGridRange()) {

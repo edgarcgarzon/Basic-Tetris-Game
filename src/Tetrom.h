@@ -16,6 +16,11 @@ template <class T> struct Point {
   operator Point<int>() const {
     return Point<int>{static_cast<int>(x), static_cast<int>(y)};
   }
+  bool neighbour(Point p){
+    if((p.x + 1 == x) || (p.x - 1 == x)){return true;}
+    if((p.y + 1 == y) || (p.y - 1 == y)){return true;}
+    return false;
+  }
 };
 
 enum class TetromType { L, S, T, O, I, Count };
@@ -38,6 +43,8 @@ public:
   bool Move(MoveType moveType, float speed);
   bool Turn(TurnType turnType);
   std::vector<Point<int>> GetCurrPoints() const;
+  
+  TetromType type;
 
   // static members
   static int gridWidth;  // This member shall be set before the any objec
@@ -61,7 +68,6 @@ private:
 
 
   const std::vector<std::vector<Point<int>>> _states;
-  TetromType _type;
 };
 
 /*
