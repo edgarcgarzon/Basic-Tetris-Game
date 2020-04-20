@@ -7,35 +7,20 @@
 
 #include "Point.h"
 #include "Tetrom.h"
-
-struct Color {
-
-  Color(unsigned char red, unsigned char green, unsigned char blue)
-      : _blue(blue), _green(green), _red(red) {}
-
-  unsigned char _red;
-  unsigned char _blue;
-  unsigned char _green;
-};
-
-const Color OColor = Color(255,255,255);
-const Color IColor = Color(255,255,255);
-const Color SColor = Color(255,255,255);
-const Color LColor = Color(255,255,255);
-const Color TColor = Color(255,255,255);
-
+#include "Color.h"
 
 struct Cell {
-  Point<int> p;
+  bool filled;
   Color color;
 };
 
 class Bottom {
 public:
   Bottom(int gridWidth, int gridHeight);
-  Intersection CheckIntersection(Tetrom* tetrom);
-  bool Add(Tetrom* tetrom);
-  
+  Intersection CheckIntersection(Tetrom *tetrom);
+  bool Add(Tetrom *tetrom);
+  Cell &cell(int x, int y) { return _cells[y * _gridWidth + x]; }
+
   std::vector<Cell> _cells;
 
 private:

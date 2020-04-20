@@ -3,20 +3,20 @@
 #include "Bottom.h"
 
 Bottom::Bottom(int gridWidth, int gridHeight)
-    : _gridHeight(gridHeight), _gridWidth(gridWidth) {}
+    : _gridHeight(gridHeight), _gridWidth(gridWidth) {
+
+        auto c = Cell{false, Color(255,255,255)};
+        _cells = std::vector<Cell>(_gridHeight*_gridWidth, c);
+    }
 
 //check if there is an intersection
 Intersection Bottom::CheckIntersection(Tetrom* tetrom){
     Intersection ret{false, false, false};
     for(auto p:tetrom->GetCurrPoints()){
         //std::cout<<"Check point ("<<p.x<<","<<p.y<<") against";
-        for(auto c:_cells){
-            //std::cout<<" ("<<c.p.x<<","<<c.p.y<<") ";
-            ret |= c.p.CheckNeighbour(p);
-            if(ret == Intersection{true,true,true}){
-                return ret;
-            }
-        }
+        if(((p.y + 1) < _gridHeight) && cell(p.x, (p.y + 1)).filled){ret.Down |= true;}
+        if(((p.x - 1) > 0)           && cell((p.x - 1), p.y).filled){ret.Left |= true;}
+        if(((p.x + 1) < _gridWidth)  && cell((p.x + 1), p.y).filled){ret.Right |= true;}
     }
     
     return ret;
@@ -25,16 +25,10 @@ Intersection Bottom::CheckIntersection(Tetrom* tetrom){
 //Add tatrom to bottom
 bool Bottom::Add(Tetrom *tetrom){
     Color tc(255,255,255);
-    switch(tetrom->type){
-        case TetromType::I:{tc = IColor;break;}
-        case TetromType::S:{tc = SColor;break;}
-        case TetromType::L:{tc = LColor;break;}
-        case TetromType::O:{tc = OColor;break;}
-        case TetromType::T:{tc = TColor;break;}
-    }
 
     //Add all points to bottom
     for(auto p:tetrom->GetCurrPoints()){
-        _cells.emplace_back(Cell{{p.x, p.y}, tc});
+        cell(p.x, p.y).filled = true;
+        cell(p.x, p.y).color = Color::GetTetromColor(tetrom->type);
     }    
 }

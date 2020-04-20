@@ -4,12 +4,8 @@
 #include <vector>
 #include "Point.h"
 
-enum class TetromType { L, S, T, O, I, Count };
 
-enum class TurnType {
-  CW = 0, // clock-wise
-  CCW     // Counter clock-wise
-};
+enum class TetromType { L, S, T, O, I, Count };
 
 enum class MoveType {
   None,

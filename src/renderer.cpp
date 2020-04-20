@@ -36,7 +36,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Tetrom* tetrom, Bottom* bottom) {
+void Renderer::Render(Tetrom *tetrom, Bottom *bottom) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -44,21 +44,28 @@ void Renderer::Render(Tetrom* tetrom, Bottom* bottom) {
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
-  
-  //Draw current tetrom
-   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  for (auto p: tetrom->GetCurrPoints()) {
+
+  // Draw current tetrom
+  Color c = Color::GetTetromColor(tetrom->type);
+  SDL_SetRenderDrawColor(sdl_renderer, c.red, c.green, c.blue, 0xFF);
+  for (auto p : tetrom->GetCurrPoints()) {
     block.x = p.x * block.w;
     block.y = p.y * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
   }
 
-  //Draw bottom
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  for (auto c: bottom->_cells) {
-    block.x = c.p.x * block.w;
-    block.y = c.p.y * block.h;
-    SDL_RenderFillRect(sdl_renderer, &block);
+  // Draw bottom
+  for (int i = 0; i < grid_width; i++) {
+    for (int j = 0; j < grid_height; j++) {
+      if(bottom->cell(i,j).filled)
+      {
+        Color c = bottom->cell(i,j).color;
+        SDL_SetRenderDrawColor(sdl_renderer, c.red, c.green, c.blue, 0xFF);
+        block.x = i * block.w;
+        block.y = j * block.h;
+        SDL_RenderFillRect(sdl_renderer, &block);
+      }
+    }
   }
 
   // Update Screen
