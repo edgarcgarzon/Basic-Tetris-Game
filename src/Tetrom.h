@@ -2,26 +2,7 @@
 #define __TETROM_H__
 
 #include <vector>
-
-template <class T> struct Point {
-  T x;
-  T y;
-
-  // Overload operator
-  Point operator+(const Point &a) const { return Point<T>{a.x + x, a.y + y}; }
-  Point& operator+=(const Point &a){x += a.x; y += a.y;}
-  Point operator-(const Point &a) const { return Point<T>{a.x - x, a.y - y}; }
-  Point& operator-=(const Point &a){x -= a.x; y -= a.y;}
-  bool operator==(const Point &a) const { return (x == a.x && y == a.y); }
-  operator Point<int>() const {
-    return Point<int>{static_cast<int>(x), static_cast<int>(y)};
-  }
-  bool neighbour(Point p){
-    if((p.x + 1 == x) || (p.x - 1 == x)){return true;}
-    if((p.y + 1 == y) || (p.y - 1 == y)){return true;}
-    return false;
-  }
-};
+#include "Point.h"
 
 enum class TetromType { L, S, T, O, I, Count };
 
@@ -31,18 +12,23 @@ enum class TurnType {
 };
 
 enum class MoveType {
-  Down = 0,
+  None,
+  Down,
   Left,
   Right,
-
+  Turn
 };
 
 class Tetrom {
 public:
   // Tetrom() : Tetrom({0, 0}, 0, {}) {} // Dummy constructor shall not be used
   bool Move(MoveType moveType, float speed);
-  bool Turn(TurnType turnType);
+  bool Turn();
+  
+  //Setters and getters
   std::vector<Point<int>> GetCurrPoints() const;
+  void SetPendingMove(MoveType moveType){_pendingMove = moveType;}
+  MoveType GetPendingMove(){return _pendingMove;}
   
   TetromType type;
 
@@ -65,6 +51,7 @@ private:
   bool TryReBase();
   Point<int> GetMaxXY() const;
   Point<int> GetMinXY() const;
+  MoveType _pendingMove;
 
 
   const std::vector<std::vector<Point<int>>> _states;

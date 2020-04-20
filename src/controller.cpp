@@ -4,7 +4,7 @@
 
 
 
-void Controller::HandleInput(bool &running, std::shared_ptr<Tetrom> tetrom) const {
+void Controller::HandleInput(bool &running, Tetrom* tetrom) const {
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
     if (e.type == SDL_QUIT) {
@@ -12,20 +12,24 @@ void Controller::HandleInput(bool &running, std::shared_ptr<Tetrom> tetrom) cons
     } else if (e.type == SDL_KEYDOWN) {
       switch (e.key.keysym.sym) {
       case SDLK_UP:
-        tetrom->Turn(TurnType::CW);
+        tetrom->SetPendingMove(MoveType::Turn);
         break;
 
       case SDLK_DOWN:
-        tetrom->Move(MoveType::Down, 1);
+        tetrom->SetPendingMove(MoveType::Down);
         break;
 
       case SDLK_LEFT:
-        tetrom->Move(MoveType::Left, 1);
+        tetrom->SetPendingMove(MoveType::Left);
         break;
 
       case SDLK_RIGHT:
-        tetrom->Move(MoveType::Right, 1);
+        tetrom->SetPendingMove(MoveType::Right);
         break;
+      
+      default:
+        tetrom->SetPendingMove(MoveType::None);
+      break;
       }
     }
   }

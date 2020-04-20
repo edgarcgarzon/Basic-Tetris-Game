@@ -8,6 +8,7 @@
 #include "controller.h"
 #include "renderer.h"
 #include "Tetrom.h"
+#include "Bottom.h"
 
 
 class Game {
@@ -18,7 +19,8 @@ public:
   int GetScore() const;
 
 private:
-  std::shared_ptr<Tetrom> _tetrom;
+  std::unique_ptr<Tetrom> _tetrom;
+  std::unique_ptr<Bottom> _bottom;
 
   std::random_device dev;
   std::mt19937 engine;

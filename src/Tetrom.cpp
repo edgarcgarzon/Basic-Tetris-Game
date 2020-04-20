@@ -69,10 +69,11 @@ std::vector<Point<int>> Tetrom::GetCurrPoints() const {
   return std::move(retV);
 }
 
+
 // Move tetrom according to direction and speed, if the final position is out of
 // the range of the grid: the function return false and does not affect the
 // tetrom
-bool Tetrom::Move(MoveType moveType, float speed) {
+bool Tetrom::Move(MoveType moveType, float speed = 1) {
 
   Point<float> tempCurrPos = _currPos;
 
@@ -87,6 +88,10 @@ bool Tetrom::Move(MoveType moveType, float speed) {
 
   case MoveType::Right:
     _currPos.x += speed;
+    break;
+
+  case MoveType::Turn:
+    return Turn();
     break;
 
   default:
@@ -104,15 +109,11 @@ bool Tetrom::Move(MoveType moveType, float speed) {
 
 // Turn tetrom according to turn-type, if the final position is out of the range
 // of the grid the function return false and does not affect the tetrom
-bool Tetrom::Turn(TurnType turnType) {
+bool Tetrom::Turn() {
   int oldCurrState = _currState;
 
   // Move the index
-  if (turnType == TurnType::CW) {
-    _currState += 1;
-  } else {
-    _currState -= 1;
-  }
+  _currState += 1;
 
   // check index in the range
   if (_currState < 0) {

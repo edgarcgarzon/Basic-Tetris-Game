@@ -6,6 +6,7 @@
 
 #include "SDL.h"
 #include "Tetrom.h"
+#include "Bottom.h"
 
 
 class Renderer {
@@ -14,7 +15,7 @@ public:
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(std::shared_ptr<Tetrom> tetrom);
+  void Render(Tetrom* tetrom, Bottom* bottom);
   void UpdateWindowTitle(int score, int fps);
 
 private:

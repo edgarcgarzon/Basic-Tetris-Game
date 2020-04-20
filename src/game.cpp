@@ -3,9 +3,11 @@
 #include <iostream>
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : engine(dev()), random_w(0, static_cast<int>(grid_width)),
-      random_t(0, static_cast<int>((int)TetromType::Count-1)) {
-
+    : engine(dev()), 
+    random_w(0, static_cast<int>(grid_width)),
+    random_t(0, static_cast<int>((int)TetromType::Count-1)){
+  
+  _bottom = std::make_unique<Bottom>(grid_width, grid_height);
   CreateNewTetrom();
   _newTetrom = false;
 }
@@ -23,9 +25,9 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, _tetrom);
+    controller.HandleInput(running, _tetrom.get());
     Update();
-    renderer.Render(_tetrom);
+    renderer.Render(_tetrom.get(), _bottom.get());
 
     frame_end = SDL_GetTicks();
 
@@ -56,7 +58,37 @@ void Game::Update() {
     _newTetrom = false;
   } else {
     if (!_tetrom->Move(MoveType::Down, 0.05)) {
+      _bottom->Add(_tetrom.get());
       _newTetrom = true;
+    }
+    else 
+    {
+      // Check for intersection and get move type
+      Intersection I = _bottom->CheckIntersection(_tetrom.get());
+      MoveType mt = _tetrom->GetPendingMove();
+      
+      //If intersection down
+      if(I.Down)
+      {
+        //add it to bottom
+        _bottom->Add(_tetrom.get());
+        _newTetrom = true;
+      }
+      else if(I.Right && mt == MoveType::Right)
+      {
+        /* do nothing as there are blocks at the right that does not allow movement */
+      }
+      else if(I.Left && mt == MoveType::Left)
+      {
+        /* do nothing as there are blocks at the left that does not allow movement */
+      }
+      else
+      {
+        // apply the movement
+        _tetrom->Move(mt, 1);
+      }
+
+      _tetrom->SetPendingMove(MoveType::None);
     }
   }
 }
@@ -75,19 +107,19 @@ void Game::CreateNewTetrom() {
   // Create the new Teatrom
   switch (TT) {
   case TetromType::I:
-    _tetrom = std::make_shared<ITetrom>(initPoint, 0);
+    _tetrom = std::make_unique<ITetrom>(initPoint, 0);
     break;
   case TetromType::S:
-    _tetrom = std::make_shared<STetrom>(initPoint, 0);
+    _tetrom = std::make_unique<STetrom>(initPoint, 0);
     break;
   case TetromType::T:
-    _tetrom = std::make_shared<TTetrom>(initPoint, 0);
+    _tetrom = std::make_unique<TTetrom>(initPoint, 0);
     break;
   case TetromType::O:
-    _tetrom = std::make_shared<OTetrom>(initPoint, 0);
+    _tetrom = std::make_unique<OTetrom>(initPoint, 0);
     break;
   case TetromType::L:
-    _tetrom = std::make_shared<LTetrom>(initPoint, 0);
+    _tetrom = std::make_unique<LTetrom>(initPoint, 0);
     break;
   default:
     throw "Out of range";

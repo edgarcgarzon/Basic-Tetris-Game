@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 
+#include "Point.h"
 #include "Tetrom.h"
 
 struct Color {
@@ -32,11 +33,12 @@ struct Cell {
 class Bottom {
 public:
   Bottom(int gridWidth, int gridHeight);
-  bool CheckIntersection(std::shared_ptr<Tetrom> tetrom);
-  bool Add(std::shared_ptr<Tetrom> tetrom);
+  Intersection CheckIntersection(Tetrom* tetrom);
+  bool Add(Tetrom* tetrom);
+  
+  std::vector<Cell> _cells;
 
 private:
-  std::vector<Cell> _cells;
   int _gridWidth;
   int _gridHeight;
 };

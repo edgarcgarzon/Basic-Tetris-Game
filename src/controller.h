@@ -8,7 +8,7 @@
 
 class Controller {
 public:
-  void HandleInput(bool &running, std::shared_ptr<Tetrom> tetrom) const;
+  void HandleInput(bool &running, Tetrom* tetrom) const;
 
 private:
 
