@@ -1,7 +1,10 @@
+#include <iostream>
+
 #include "controller.h"
 #include "game.h"
 #include "renderer.h"
-#include <iostream>
+#include "Tetrom.h"
+
 
 int main() {
   constexpr std::size_t kFramesPerSecond{60};
@@ -10,6 +13,11 @@ int main() {
   constexpr std::size_t kScreenHeight{640};
   constexpr std::size_t kGridWidth{32};
   constexpr std::size_t kGridHeight{32};
+
+  //Update the Tetrom class
+  Tetrom::gridWidth = kGridWidth;
+  Tetrom::gridHeight = kGridHeight;
+  
 
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
   Controller controller;
