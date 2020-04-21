@@ -46,7 +46,7 @@ bool Bottom::Add(Tetrom *tetrom) {
 int Bottom::Update() {
 
   int removedRows = 0;
-  
+
   std::remove_if(_cells.begin(), _cells.end(),
                  [&removedRows](std::vector<Cell> row) {
                    for (auto c : row) {
@@ -81,4 +81,14 @@ bool Bottom::RowFilled(int row) {
     }
   }
   return true;
+}
+
+//check if game-over
+bool Bottom::CheckGameOver()
+{
+    for(auto c:_cells[0])
+    {
+        if(c.filled){return true;}
+    }
+    return false;
 }

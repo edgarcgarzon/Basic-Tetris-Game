@@ -22,6 +22,7 @@ public:
   bool Add(Tetrom *tetrom);
   Cell &cell(int x, int y) { return _cells[y][x]; }
   int Update();
+  bool CheckGameOver();
 
 private:
   bool RowFilled(int row);

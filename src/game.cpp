@@ -3,10 +3,9 @@
 #include <iostream>
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : engine(dev()), 
-    random_w(0, static_cast<int>(grid_width)),
-    random_t(0, static_cast<int>((int)TetromType::Count-1)){
-  
+    : engine(dev()), random_w(0, static_cast<int>(grid_width)),
+      random_t(0, static_cast<int>((int)TetromType::Count - 1)) {
+
   _bottom = std::make_unique<Bottom>(grid_width, grid_height);
   CreateNewTetrom();
   _newTetrom = false;
@@ -28,6 +27,11 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     controller.HandleInput(running, _tetrom.get());
     Update();
     renderer.Render(_tetrom.get(), _bottom.get());
+
+    // check game-over
+    if (_bottom->CheckGameOver()) {
+      return;
+    }
 
     frame_end = SDL_GetTicks();
 
@@ -60,38 +64,36 @@ void Game::Update() {
     if (!_tetrom->Move(MoveType::Down, 0.05)) {
       _bottom->Add(_tetrom.get());
       _newTetrom = true;
-    }
-    else 
-    {
+    } else {
       // Check for intersection and get move type
       Intersection I = _bottom->CheckIntersection(_tetrom.get());
       MoveType mt = _tetrom->GetPendingMove();
-      
-      //If intersection down
-      if(I.Down)
-      {
-        //add it to bottom
+
+      // If intersection down
+      if (I.Down) {
+        // add it to bottom
         _bottom->Add(_tetrom.get());
         _newTetrom = true;
-      }
-      else if(I.Right && mt == MoveType::Right)
-      {
-        /* do nothing as there are blocks at the right that does not allow movement */
-      }
-      else if(I.Left && mt == MoveType::Left)
-      {
-        /* do nothing as there are blocks at the left that does not allow movement */
-      }
-      else
-      {
+      } else if (I.Right && mt == MoveType::Right) {
+        /* do nothing as there are blocks at the right that does not allow
+         * movement */
+      } else if (I.Left && mt == MoveType::Left) {
+        /* do nothing as there are blocks at the left that does not allow
+         * movement */
+      } else {
         // apply the movement
         _tetrom->Move(mt, 1);
       }
 
       _tetrom->SetPendingMove(MoveType::None);
 
-      //remove the filled rows and increment the score
-      _score += _bottom->Update();
+      // remove the filled rows and increment the score
+      int deltedRows = _bottom->Update();
+      _score += deltedRows;
+      // give abonus if the number of rows deleted are more than 1
+      if (deltedRows > 1) {
+        _score += (int)pow(2, (deltedRows - 1));
+      }
     }
   }
 }
