@@ -89,6 +89,9 @@ void Game::Update() {
       }
 
       _tetrom->SetPendingMove(MoveType::None);
+
+      //remove the filled rows and increment the score
+      _score += _bottom->Update();
     }
   }
 }

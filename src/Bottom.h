@@ -10,6 +10,7 @@
 #include "Color.h"
 
 struct Cell {
+  Cell():filled(false), color(255,255,255){};
   bool filled;
   Color color;
 };
@@ -19,13 +20,16 @@ public:
   Bottom(int gridWidth, int gridHeight);
   Intersection CheckIntersection(Tetrom *tetrom);
   bool Add(Tetrom *tetrom);
-  Cell &cell(int x, int y) { return _cells[y * _gridWidth + x]; }
-
-  std::vector<Cell> _cells;
+  Cell &cell(int x, int y) { return _cells[y][x]; }
+  int Update();
 
 private:
+  bool RowFilled(int row);
+
   int _gridWidth;
   int _gridHeight;
+
+  std::vector<std::vector<Cell>> _cells;
 };
 
 #endif // __BOTTOM_H__
