@@ -29,6 +29,7 @@ private:
 
   bool _newTetrom;
   int _score{0};
+  float _speed;
 
   void Update();
   void CreateNewTetrom();

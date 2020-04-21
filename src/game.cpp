@@ -4,7 +4,8 @@
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : engine(dev()), random_w(0, static_cast<int>(grid_width)),
-      random_t(0, static_cast<int>((int)TetromType::Count - 1)) {
+      random_t(0, static_cast<int>((int)TetromType::Count - 1)),
+      _speed(0.05) {
 
   _bottom = std::make_unique<Bottom>(grid_width, grid_height);
   CreateNewTetrom();
@@ -61,7 +62,7 @@ void Game::Update() {
     CreateNewTetrom();
     _newTetrom = false;
   } else {
-    if (!_tetrom->Move(MoveType::Down, 0.05)) {
+    if (!_tetrom->Move(MoveType::Down, _speed)) {
       _bottom->Add(_tetrom.get());
       _newTetrom = true;
     } else {
@@ -82,7 +83,7 @@ void Game::Update() {
          * movement */
       } else {
         // apply the movement
-        _tetrom->Move(mt, 1);
+        _tetrom->Move(mt, 1 );
       }
 
       _tetrom->SetPendingMove(MoveType::None);
@@ -90,6 +91,7 @@ void Game::Update() {
       // remove the filled rows and increment the score
       int deltedRows = _bottom->Update();
       _score += deltedRows;
+      _speed += deltedRows/100;
       // give abonus if the number of rows deleted are more than 1
       if (deltedRows > 1) {
         _score += (int)pow(2, (deltedRows - 1));
