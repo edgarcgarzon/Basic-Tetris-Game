@@ -52,7 +52,7 @@ This project is inspired at [CppND-Capstone-Snake-Game](https://github.com/udaci
 
 
 ```
-![](/media/edgar/Data/Projects/CppUdacity/CppND-Capstone-Tetris/path10664-6.png)
+![](path10664-6.png)
 
 ## Project Specification
 
