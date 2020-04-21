@@ -25,12 +25,14 @@ Renderer::Renderer(const std::size_t screen_width,
 
   // Create renderer
   sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED);
-f (!m_renderer) {
-        SDL_Log("Unable to create accelerated renderer: %s", SDL_GetError());
-        // fallback to software renderer
-        m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_SOFTWARE);
-        if (!m_renderer) {
-            SDL_Log("Unable to create software renderer: %s", SDL_GetError());
+  if (!sdl_renderer) {
+    SDL_Log("Unable to create accelerated renderer: %s", SDL_GetError());
+    // fallback to software renderer
+    sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_SOFTWARE);
+    if (!sdl_renderer) {
+      SDL_Log("Unable to create software renderer: %s", SDL_GetError());
+    }
+  }
 }
 
 Renderer::~Renderer() {
@@ -59,9 +61,8 @@ void Renderer::Render(Tetrom *tetrom, Bottom *bottom) {
   // Draw bottom
   for (int i = 0; i < grid_width; i++) {
     for (int j = 0; j < grid_height; j++) {
-      if(bottom->cell(i,j).filled)
-      {
-        Color c = bottom->cell(i,j).color;
+      if (bottom->cell(i, j).filled) {
+        Color c = bottom->cell(i, j).color;
         SDL_SetRenderDrawColor(sdl_renderer, c.red, c.green, c.blue, 0xFF);
         block.x = i * block.w;
         block.y = j * block.h;
