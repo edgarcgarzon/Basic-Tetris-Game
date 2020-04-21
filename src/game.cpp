@@ -91,7 +91,7 @@ void Game::Update() {
       // remove the filled rows and increment the score
       int deltedRows = _bottom->Update();
       _score += deltedRows;
-      _speed += deltedRows/100;
+      _speed += (deltedRows * 0.0020);
       // give abonus if the number of rows deleted are more than 1
       if (deltedRows > 1) {
         _score += (int)pow(2, (deltedRows - 1));
