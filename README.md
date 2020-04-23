@@ -1,4 +1,4 @@
-# CPPND: Capstone Project: Tetris
+# Basic-Tetris-Game
 
 Classic tetris game as defined by [Tetris-Wikipedia](https://en.wikipedia.org/wiki/Tetris) with the basic set of 5 tetrominoes that increases the game speed each time a row is complete and give bonus for multi-row completion.
 
